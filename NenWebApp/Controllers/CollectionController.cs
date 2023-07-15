@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using NenWebApp.Data;
-using NenWebApp.Entities;
+﻿using Microsoft.AspNetCore.Mvc;
 using NenWebApp.Interfaces;
 using NenWebApp.ViewModels;
+using NenWebApp.Enums;
 
 namespace NenWebApp.Controllers;
 public class CollectionController : Controller
@@ -20,9 +16,7 @@ public class CollectionController : Controller
 
     public IActionResult Index()
     {
-        var viewModel = _databaseService.GetExercises();
-
-        return View(viewModel);
+        return View();
     }
 
     [HttpPost]
@@ -31,7 +25,7 @@ public class CollectionController : Controller
         await _databaseService.AddExerciseAsync(User, newExercise);
 
         var viewModel = _databaseService.GetExercises();
-        return View("Index", viewModel);
+        return View("Exercises", viewModel);
     }
 
     [HttpPost]
@@ -41,7 +35,7 @@ public class CollectionController : Controller
         await _databaseService.DeleteExerciseEntryAsync(exerciseId);
 
         var viewModel = _databaseService.GetExercises();
-        return View("Index", viewModel);
+        return View("Exercises", viewModel);
     }
 
     [HttpPost]
@@ -50,6 +44,20 @@ public class CollectionController : Controller
         await _databaseService.EditExerciseAsync(editedExercise);
 
         var viewModel = _databaseService.GetExercises();
-        return View("Index", viewModel);
+        return View("Exercises", viewModel);
+    }
+
+    public IActionResult Exercises()
+    {
+        var viewModel = _databaseService.GetExercises();
+
+        return View("Exercises", viewModel);
+    }
+
+    public IActionResult GetMusclesByRegion(string region)
+    {
+        List<string> regionMatchedMuscles = MuscleRegionMapping.GetMusclesForRegion(region);
+
+        return Json(regionMatchedMuscles);
     }
 }

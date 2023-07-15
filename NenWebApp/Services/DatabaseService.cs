@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using NenWebApp.Data;
 using NenWebApp.Entities;
 using NenWebApp.Interfaces;
@@ -22,10 +21,12 @@ public class DatabaseService : IDatabaseService
 
     public async Task DeleteExerciseEntryAsync(Guid id)
     {
-        var entity = await _context.Set<Exercise>().FindAsync(id);
+        Exercise entity = await _context.Set<Exercise>().FindAsync(id);
+        bool isDefaultExercise = entity.User == null;
+
         if (entity != null)
         {
-            if (entity.User != null)
+            if (isDefaultExercise)
             {
                 _context.Set<Exercise>().Remove(entity);
                 await _context.SaveChangesAsync();
@@ -51,36 +52,45 @@ public class DatabaseService : IDatabaseService
 
     public async Task AddExerciseAsync(ClaimsPrincipal user, ExerciseViewModel viewModel)
     {
-        var userId = await _userManager.GetUserAsync(user);
+        ApplicationUser userId = await _userManager.GetUserAsync(user);
 
-        Exercise newExercise = new Exercise
+        if (userId != null)
         {
-            Name = viewModel.Name,
-            PrimaryMuscle = viewModel.PrimaryMuscle,
-            Region = viewModel.Region,
-            Type = viewModel.Type,
-            Notes = viewModel.Notes,
-            IsPublic = viewModel.IsPublic,
-            User = userId
-        };
+            Exercise newExercise = new Exercise
+            {
+                Name = viewModel.Name,
+                PrimaryMuscle = viewModel.PrimaryMuscle,
+                Region = viewModel.Region,
+                Type = viewModel.Type,
+                Notes = viewModel.Notes,
+                IsPublic = viewModel.IsPublic,
+                User = userId
+            };
 
-        await _context.Exercises.AddAsync(newExercise);
-        await _context.SaveChangesAsync();
+            await _context.Exercises.AddAsync(newExercise);
+            await _context.SaveChangesAsync();
+        }
+        
     }
 
     public async Task EditExerciseAsync(ExerciseViewModel viewModel)
     {
-        var entity = await _context.Set<Exercise>().FindAsync(viewModel.Id);
+        Exercise entity = await _context.Set<Exercise>().FindAsync(viewModel.Id);
+        bool isDefaultExercise = entity.User == null;
+
         if (entity != null)
         {
-            entity.Region = viewModel.Region;
-            entity.Type = viewModel.Type;
-            entity.Notes = viewModel.Notes;
-            entity.Name = viewModel.Name;
-            entity.PrimaryMuscle = viewModel.PrimaryMuscle;
-            entity.IsPublic = viewModel.IsPublic;
-            
-            await _context.SaveChangesAsync();
+            if (!isDefaultExercise) // 
+            {
+                entity.Region = viewModel.Region;
+                entity.Type = viewModel.Type;
+                entity.Notes = viewModel.Notes;
+                entity.Name = viewModel.Name;
+                entity.PrimaryMuscle = viewModel.PrimaryMuscle;
+                entity.IsPublic = viewModel.IsPublic;
+
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

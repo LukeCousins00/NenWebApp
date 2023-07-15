@@ -1,4 +1,15 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿var mainNavbar = document.getElementById("main-navbar");
+var activePageId = sessionStorage.getItem('activePageId');
 
-// Write your JavaScript code.
+document.addEventListener('DOMContentLoaded', function () {
+    // persist nav icon color
+    if (activePageId != null) {
+        var icon = document.getElementById(activePageId);
+        icon.style.border  = "2px solid black";
+        icon.style.borderRadius = "9px";
+    }
+});
+
+mainNavbar.addEventListener("click", function (event) {
+    sessionStorage.setItem('activePageId', event.target.id);
+});

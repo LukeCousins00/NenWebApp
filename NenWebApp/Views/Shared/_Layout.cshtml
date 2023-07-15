@@ -11,43 +11,46 @@
     <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/NenWebApp.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@mdi/font@7.2.96/css/materialdesignicons.min.css" />
     <link href='https://css.gg/css' rel='stylesheet'>
     <link rel="icon" href="@Url.Content("~/images/favicon.png")" />
 </head>
 
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <img src="~/images/favicon.png" style="height: 45px; padding: 3px;" />
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Nen</a>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Browse" asp-action="Index">Browse</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Collection" asp-action="Index">My Collection</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Workout" asp-action="Index">Workout!</a>
-                        </li>
-                    </ul>
-                </div>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                <div class="container-fluid">
+                    <img src="~/images/favicon.png" style="height: 45px; padding: 3px;" />
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Nen</a>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-center" style="flex-direction:column">
+                        <ul id="main-navbar" class="navbar-nav flex-grow-1" style="left: 15px; position: relative;">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark nav-a" asp-area="" asp-controller="Browse" asp-action="Index">
+                                <span id="main-nav-browse" class="mdi mdi-magnify nav-icon"></span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark nav-a" asp-area="" asp-controller="Collection" asp-action="Index">
+                                    <span id="main-nav-collection" class="mdi mdi-bookmark-box-multiple nav-icon"></span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark nav-a" asp-area="" asp-controller="Workout" asp-action="Index">
+                                <span id="main-nav-workout" class="mdi mdi-weight-lifter nav-icon"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
                 </div>
                 <partial name="_LoginPartial"></partial>
-            </div>
-        </nav>
-    </header>
+            </nav>
+        </header>
     <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        @RenderBody()
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>

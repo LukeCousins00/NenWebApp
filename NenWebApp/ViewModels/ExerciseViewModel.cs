@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using NenWebApp.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace NenWebApp.ViewModels;
 
@@ -13,4 +14,5 @@ public class ExerciseViewModel
     public string Type { get; set; } // REQUIRED
     public string PrimaryMuscle { get; set; }  // REQUIRED  // Main muscle trained during this exercise
     public bool IsPublic { get; set; }
+    public List<Muscle> MusclesByRegion { get; set; }
 }
