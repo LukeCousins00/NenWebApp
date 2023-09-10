@@ -1,0 +1,47 @@
+@model NenWebApp.Models.ExerciseButtonModel
+
+<div class="row builder-row justify-content-center">
+    <input type="hidden" id="@Model.Id"/>
+    <div class="col-3">
+        <div class="form-floating">
+            <input class="form-control" id="exercise-name" type="text" value="@Model.Name"/>
+            <label for="exercise-name">
+                <span class="mdi mdi-rename-outline"></span> Exercise Name
+            </label>
+        </div>
+    </div>
+    <div class="col-1">
+        <div class="form-floating">
+            <input id="sets" type="number" class="form-control">
+            <label for="sets"><span class="mdi mdi-weight-lifter"></span> Sets</label>
+        </div>
+    </div>
+    <div class="col-1">
+        <div class="form-floating">
+            <input id="min-reps" type="number" class="form-control">
+            <label for="min-reps">
+                <span class="mdi mdi-chevron-down"></span> Reps L
+            </label>
+        </div>
+    </div>
+    <div class="col-1">
+        <div class="form-floating">
+            <input id="max-reps" type="number" class="form-control">
+            <label for="max-reps">
+                <span class="mdi mdi-chevron-up"></span> Reps H
+            </label>
+        </div>
+    </div>
+    <div class="col-2">
+        <div class="form-floating">
+            <input id="rest" type="number" class="form-control">
+            <label for="rest"><span class="mdi mdi-timer-outline"></span> Rest (seconds)</label>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="form-floating">
+            <input id="instruction" class="form-control" value="@Model.Notes">
+            <label for="instruction"><span class="mdi mdi-clipboard-list-outline"></span> Instruction:</label>
+        </div>
+    </div>
+</div>

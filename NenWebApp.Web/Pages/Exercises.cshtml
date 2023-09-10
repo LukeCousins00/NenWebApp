@@ -1,0 +1,298 @@
+@page
+@using NenWebApp.Shared.DTOs
+@using NenWebApp.Shared.Enums
+@using NenWebApp.ViewModels
+@model NenWebApp.Pages.Exercises
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Exercises</title>
+</head>
+<body>
+<div>
+    @*mini nav bar*@
+    <partial name="_EWPNavPartial"></partial>
+    
+    <!-- Exercise Modal -->
+    <div class="modal fade" id="exerciseModal" tabindex="-1" aria-labelledby="exerciseModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exerciseModalLabel">Exercise</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form asp-page-handler="" method="post">
+                        <input id="exerciseModalExerciseId" name="Id" type="hidden" value=""/>
+    
+                        <div class="form-group" style="padding: 16px">
+                            <div class="form-floating">
+                                <input class="form-control" id="exerciseModalExerciseName" name="Name" type="text" required maxlength="200" style="margin-bottom:5px;">
+                                <label for="exerciseModalExerciseName">Name</label>
+                            </div>
+                            <select id="region-selector" type="text" required class="form-select" aria-label="Select Muscle Region" name="Region" style="margin-bottom:5px;">
+                                <option value="" id="defaultRegion" selected>Muscle Region</option>
+                                @foreach (object? region in Enum.GetValues(typeof(Section)))
+                                {
+                                    <option id="exerciseModal@(region)" value="@region">@region</option>
+                                }
+                            </select>
+                            <select id="muscle-selector" type="text" required class="form-select" aria-label="Select Primary Muscle" name="PrimaryMuscle" style="margin-bottom:5px;">
+                                <option value="" id="defaultMuscle" selected>Primary Muscle</option>
+                                @foreach (object? muscle in Enum.GetValues(typeof(Anatomy)))
+                                {
+                                    <option id="exerciseModal@(muscle)" value="@muscle">@muscle</option>
+                                }
+                            </select>
+                            <select type="text" required class="form-select" aria-label="Select Exercise Type" name="Type" style="margin-bottom:5px;">
+                                <option value="" id="defaultType" selected>Exercise Type</option>
+                                @foreach (object? type in Enum.GetValues(typeof(ExerciseCategory)))
+                                {
+                                    <option id="exerciseModal@(type)" value="@type">@type</option>
+                                }
+                            </select>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="0" id="exerciseModalIsPublicExercise" name="IsPublic">
+                                <label class="form-check-label" for="exerciseModalIsPublicExercise">
+                                    Public <br/><small>(This exercise will be visible to other users)</small>
+                                </label>
+                            </div>
+                            <div class="form-floating">
+                                <input class="form-control" id="exerciseModalExerciseNotes" name="Notes" style="height: 150px;">
+                                <label for="exerciseModalExerciseNotes">Notes: (optional)</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="display: flex; justify-content: space-between">
+                            <button type="button" id="deleteExercise" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+                            <div style="margin-left:auto">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container" style="display:flex; margin-bottom: 20px;">
+        <button type="button" class="btn btn-light" value="1" id="sortBy">Sort</button>
+        <button id="add-exercise-btn" onclick="LoadNewExerciseModal()" class="d-flex btn btn-light" style="height: fit-content; align-self: center; margin-left: 12px;">
+            Add New Exercise
+        </button>
+    </div>
+    
+    @if (Model.ExerciseList.Any())
+    {
+        <div class="container" id="upperLowerSplitView">
+            @foreach (var regionGroupedExercises in Model.ExerciseList.GroupBy(e => e.Anatomy.Section))
+            {
+                <div class="mb-5">
+                    <div class="mb-2" style="color: white;">@regionGroupedExercises.Key</div>
+                    <div class="row d-flex" style="padding-left: 10px;">
+                        @foreach (ExerciseDto exercise in regionGroupedExercises)
+                        {
+                            <button id="@exercise.Id" class="d-flex btn btn-light exercise-icon" onclick='LoadEditExerciseModal(@Html.Raw(Json.Serialize(exercise)))'>
+                                @exercise.Name
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    
+        <div class="container" id="muscleView" style="display: none;">
+            <div>
+                @foreach (var muscleGroupedExercises in Model.ExerciseList.GroupBy(e => e.Anatomy).OrderBy(e => e.Key))
+                {
+                    <div class="mb-2">
+                        <div class="mb-2" style="color: white;">
+                            @muscleGroupedExercises.Key
+                        </div>
+                        <div class="row" style="padding-left: 10px;">
+                            @foreach (ExerciseDto exercise in muscleGroupedExercises)
+                            {
+                                <button id="@exercise.Id" class="d-flex btn btn-light exercise-icon" onclick='LoadEditExerciseModal(@Html.Raw(Json.Serialize(exercise)))'>
+                                    @exercise.Name
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div>You have no Exercises!</div>
+    }
+    
+    
+</div>
+
+<script type="text/javascript">
+        let sortToggle = document.getElementById("sortBy");
+    
+        sortToggle.addEventListener("click", function () {
+            const regionSplitView = document.getElementById("upperLowerSplitView");
+            const muscleSplitView = document.getElementById("muscleView");
+    
+            if (sortToggle.value == 1) {
+                sortToggle.value = 0;
+                //sortToggle.textContent = "v";
+    
+                // Show Muscle view
+                muscleSplitView.style.display = "block";
+                regionSplitView.style.display = "none";
+    
+                return
+            }
+    
+            sortToggle.value = 1;
+            //sortToggle.textContent = ">";
+    
+            // Show Upper/Lower split view
+            muscleSplitView.style.display = "none";
+            regionSplitView.style.display = "block";
+    
+        })
+    
+        const exerciseModalIsPublicCheck = document.getElementById("exerciseModalIsPublicExercise");
+    
+        exerciseModalIsPublicCheck.onclick = function () {
+            if (!exerciseModalIsPublicCheck.checked) {
+                exerciseModalIsPublicCheck.checked = false;
+                exerciseModalIsPublicCheck.value = false;
+                return;
+            }
+            exerciseModalIsPublicCheck.checked = true;
+            exerciseModalIsPublicCheck.value = true;
+        };
+    
+        // document.getElementById("deleteExercise").addEventListener("click", function () {
+        //     const exerciseElement = document.getElementById("exerciseModalExerciseId");
+        //     console.log(exerciseElement);
+        //     const exerciseId = exerciseElement.value;
+        //     console.log(exerciseId);
+        //
+        //     $.ajax({
+        //         url: '@Url.Action("DeleteExerciseEntry", "Exercise")', // the url of the action
+        //         type: 'post', // the http method (e.g., post, get, etc.)
+        //         data: { id: exerciseId }, // the data to be sent to the server
+        //         success: function (result) {
+        //             // the ajax call was successful
+        //             console.log('exercise deleted successfully');
+        //             // handle any further actions or ui updates as needed
+        //         },
+        //         error: function (xhr, status, error) {
+        //             // an error occurred during the ajax call
+        //             console.error('error deleting exercise:', error);
+        //             // handle the error appropriately
+        //         }
+        //     });
+        //
+        //     const exerciseDeleted = document.getElementById(exerciseId);
+        //     exerciseDeleted.remove();
+        // })
+        
+        const addExerciseBtn = document.getElementById("add-exercise-btn");
+        
+        function LoadNewExerciseModal() {
+        // Make sure all fields cleared in the modal.
+            document.getElementById("exerciseModalLabel").textContent = "New Exercise";
+            document.getElementById("exerciseModalExerciseId").value = "";
+            document.getElementById("exerciseModalExerciseName").value = "";
+            document.getElementById("exerciseModalExerciseNotes").value = "";
+            document.getElementById("exerciseModalIsPublicExercise").value = false;
+    
+            // Setting the correct <options> to Selected:
+            document.getElementById("defaultRegion").selected = true;
+            document.getElementById("defaultType").selected = true;
+            document.getElementById("defaultMuscle").selected = true;
+            document.getElementById("exerciseModalIsPublicExercise").checked = false;
+            document.getElementById("exerciseModalIsPublicExercise").value = false;
+    
+            // Load the Modal
+            const newExerciseModal = new bootstrap.Modal(document.getElementById('exerciseModal'))
+            newExerciseModal.show();
+        }
+    
+        function LoadEditExerciseModal(exerciseJson) { // Populate the Edit Exercise Modal with the exercise just clicked on
+            // Set the values of the fields within the Modal
+            document.getElementById("exerciseModalLabel").textContent = "Edit Exercise";
+            document.getElementById("exerciseModalExerciseId").value = exerciseJson.id;
+            document.getElementById("exerciseModalExerciseName").value = exerciseJson.name;
+            document.getElementById("exerciseModalExerciseNotes").value = exerciseJson.notes;
+            document.getElementById("exerciseModalIsPublicExercise").value = exerciseJson.ispublic;
+    
+            // Setting the correct <options> to Selected:
+            document.getElementById("exerciseModal" + exerciseJson.region).selected = true;
+            document.getElementById("exerciseModal" + exerciseJson.primaryMuscle).selected = true;
+            document.getElementById("exerciseModal" + exerciseJson.type).selected = true;
+            document.getElementById("exerciseModalIsPublicExercise").checked = exerciseJson.isPublic;
+            document.getElementById("exerciseModalIsPublicExercise").value = exerciseJson.isPublic;
+    
+            // Load the Modal
+            const editExerciseModal = new bootstrap.Modal(document.getElementById('exerciseModal'))
+            editExerciseModal.show();
+        }
+    
+        // Edit the list of Muscles shown in the Add/Edit Modals based on the region selected
+        const regionSelector = document.getElementById("region-selector");
+        const muscleSelector = document.getElementById("muscle-selector");
+        regionSelector.addEventListener("change", function () {
+            const region = regionSelector.value;
+            console.log("Region: " + region);
+    
+            $.ajax({
+                url: '@Url.Action("GetMusclesByRegion", "Exercise")',
+                type: 'GET',
+                data: {
+                    region: region
+                },
+                success: function (response) {
+                    // Handle the successful response from the controller
+                    populateMuscleDropdown(response);
+                },
+                error: function (xhr, status, error) {
+                    // Handle any errors that occur during the request
+                    console.error("error: " + error);
+                }
+            });
+        })
+    
+        // Function to populate the Muscle <select> tags
+        function populateMuscleDropdown(muscles) {
+            while (muscleSelector.firstChild) { // Remove all old muscle options
+                muscleSelector.removeChild(muscleSelector.firstChild);
+            }
+    
+            // Add back the Primary Muscle default option
+            const defaultOption = document.createElement("option");
+            defaultOption.setAttribute("value", "");
+            defaultOption.setAttribute("selected", true);
+            defaultOption.textContent = "Primary Muscle";
+    
+            muscleSelector.appendChild(defaultOption);
+    
+            for (let i = 0; i < muscles.length; i++) {
+                
+    
+                const muscleOption = document.createElement("option");
+                muscleOption.setAttribute("value", muscles[i]);
+                muscleOption.textContent = muscles[i];
+    
+                muscleSelector.appendChild(muscleOption);
+            }
+        }
+    </script>
+
+</body>
+</html>
+

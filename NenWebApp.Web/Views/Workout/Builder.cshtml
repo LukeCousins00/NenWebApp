@@ -1,0 +1,75 @@
+@model WorkoutViewModel
+
+@{
+    ViewData["Title"] = "Workout Builder";
+}
+
+@*mini nav bar*@
+<partial name="_EWPNavPartial"></partial>
+
+<div class="modal fade" data-bs-theme="dark" id="exercise-modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="color: white;">Add an Exercise to your Workout</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex">
+                <div class="row" style="padding-left: 10px;">
+                    @foreach (var exercise in Model.AllUserExercises)
+                    {
+                        <button id="@exercise.Id" onclick='AddExerciseToWorkout(@Json.Serialize(exercise))' class="d-flex btn btn-light exercise-icon">
+                            @exercise.Name
+                        </button>
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<form asp-controller="Workout" asp-action="SaveWorkout">
+    <div class="d-flex align-items-center mb-3" style="margin-top: 15px;">
+        <div class="form">
+            <input class="form-control" id="workout-name" type="text" placeholder="Workout Name"/>
+        </div>
+    </div>
+    <div class="container workout-card d-flex justify-content-center">
+        <div id="exercises">
+            @* CALL VIEW ROWS HERE vvvv *@
+        </div>
+        <div class="d-flex justify-content-center mb-3">
+            <span id="add-exc-btn" class="mdil mdil-plus-circle" style="color: white; font-size:  35px; cursor: pointer"></span>
+        </div>
+    </div>
+</form>
+
+
+<script type="text/javascript">
+    var addExerciseBtn = document.getElementById("add-exc-btn");
+    
+    addExerciseBtn.addEventListener("click", function (){
+        const addExerciseToWorkoutModal = new bootstrap.Modal(document.getElementById('exercise-modal'))
+        addExerciseToWorkoutModal.show();
+    });
+    
+    function AddExerciseToWorkout (exercise) {
+        console.log(exercise);
+        $.ajax({
+            url: '@Url.Action("AddExerciseViewComponent", "Workout")',
+            type: 'Get',
+            contentType: "application/json",
+            dataType: "json",
+            traditional: true,
+            data: {exercise: JSON.stringify(exercise)},
+            success: function (result) {
+                $("#exercises").html(result);
+            },
+        });
+    }
+</script>
