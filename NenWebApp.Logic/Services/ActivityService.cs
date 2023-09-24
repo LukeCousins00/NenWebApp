@@ -8,32 +8,17 @@ using NenWebApp.Shared.DTOs;
 
 namespace NenWebApp.Logic.Services;
 
-public class ExerciseService : IExerciseService
+public class ActivityService : IActivityService
 {
     private readonly AppDbContext _dbContext;
     private readonly UserManager<ApplicationUser?> _userManager;
 
-    public ExerciseService(AppDbContext dbContext, UserManager<ApplicationUser?> userManager)
+    public ActivityService(AppDbContext dbContext, UserManager<ApplicationUser?> userManager)
     {
         _dbContext = dbContext;
         _userManager = userManager;
     }
-
-    public async Task DeleteExerciseEntryAsync(ClaimsPrincipal user, Guid exerciseId)
-    {
-        ApplicationUser? userId = await _userManager.GetUserAsync(user);
-
-        if (userId == null)
-            return;
-
-        var entity = _dbContext.Exercises.FirstOrDefault(e => e.User == userId && e.Id == exerciseId);
-        if (entity != null)
-        {
-            _dbContext.Exercises.Remove(entity);
-            await _dbContext.SaveChangesAsync();
-        }
-    }
-
+    
     public async Task<IQueryable<ExerciseDto>?> GetExercises(ClaimsPrincipal user)
     {
         ApplicationUser? userId = await _userManager.GetUserAsync(user);
@@ -64,6 +49,21 @@ public class ExerciseService : IExerciseService
             });
 
         return exerciseQuery;
+    }
+
+    public async Task DeleteExerciseEntryAsync(ClaimsPrincipal user, Guid exerciseId)
+    {
+        ApplicationUser? userId = await _userManager.GetUserAsync(user);
+
+        if (userId == null)
+            return;
+
+        var entity = _dbContext.Exercises.FirstOrDefault(e => e.User == userId && e.Id == exerciseId);
+        if (entity != null)
+        {
+            _dbContext.Exercises.Remove(entity);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 
     public async Task AddOrEditExerciseAsync(ClaimsPrincipal user, ExerciseDto exercise)

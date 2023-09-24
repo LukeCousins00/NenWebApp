@@ -1,6 +1,6 @@
 namespace NenWebApp.Shared.Enums;
 
-public enum Anatomy
+public enum AnatomyName
 {
     Forearm,
     Bicep,

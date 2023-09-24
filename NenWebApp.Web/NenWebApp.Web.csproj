@@ -25,10 +25,27 @@
     <_ContentIncludedByDefault Remove="Views\Components\WorkoutExerciseRowViewComponent.cshtml" />
     <_ContentIncludedByDefault Remove="Pages\Browse\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Pages\Collection\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Exercise\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Shared\Components\WorkoutExerciseRow\default.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Shared\_EWPNavPartial.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Shared\_Layout.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Shared\_LoginPartial.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Browse\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Program\Index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NenWebApp.Logic\NenWebApp.Logic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Pages\Shared\Components\WorkoutExerciseRow\default.cshtml" />
+    <AdditionalFiles Include="Pages\Shared\_EWPNavPartial.cshtml" />
+    <AdditionalFiles Include="Pages\Shared\_Layout.cshtml" />
+    <AdditionalFiles Include="Pages\Shared\_LoginPartial.cshtml" />
+    <AdditionalFiles Include="Pages\Shared\_ValidationScriptsPartial.cshtml" />
   </ItemGroup>
 
 </Project>

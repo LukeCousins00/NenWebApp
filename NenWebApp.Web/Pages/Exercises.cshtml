@@ -1,7 +1,6 @@
 @page
 @using NenWebApp.Shared.DTOs
 @using NenWebApp.Shared.Enums
-@using NenWebApp.ViewModels
 @model NenWebApp.Pages.Exercises
 
 @{
@@ -28,43 +27,43 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form asp-page-handler="" method="post">
-                        <input id="exerciseModalExerciseId" name="Id" type="hidden" value=""/>
+                    <form asp-page-handler="delete" method="post">
+                        <input id="exerciseModalExerciseId" name="id" type="hidden" value=""/>
     
                         <div class="form-group" style="padding: 16px">
                             <div class="form-floating">
-                                <input class="form-control" id="exerciseModalExerciseName" name="Name" type="text" required maxlength="200" style="margin-bottom:5px;">
+                                <input class="form-control" id="exerciseModalExerciseName" name="name" type="text" required maxlength="200" style="margin-bottom:5px;">
                                 <label for="exerciseModalExerciseName">Name</label>
                             </div>
-                            <select id="region-selector" type="text" required class="form-select" aria-label="Select Muscle Region" name="Region" style="margin-bottom:5px;">
-                                <option value="" id="defaultRegion" selected>Muscle Region</option>
+                            <select id="region-selector" type="text" required class="form-select" aria-label="Select Section" name="section" style="margin-bottom:5px;">
+                                <option value="" id="defaultRegion" selected>Section</option>
                                 @foreach (object? region in Enum.GetValues(typeof(Section)))
                                 {
                                     <option id="exerciseModal@(region)" value="@region">@region</option>
                                 }
                             </select>
-                            <select id="muscle-selector" type="text" required class="form-select" aria-label="Select Primary Muscle" name="PrimaryMuscle" style="margin-bottom:5px;">
-                                <option value="" id="defaultMuscle" selected>Primary Muscle</option>
-                                @foreach (object? muscle in Enum.GetValues(typeof(Anatomy)))
+                            <select id="muscle-selector" type="text" required class="form-select" aria-label="Select AnatomyName" name="anatomy" style="margin-bottom:5px;">
+                                <option value="" id="defaultMuscle" selected>AnatomyName</option>
+                                @foreach (object? muscle in Enum.GetValues(typeof(AnatomyName)))
                                 {
                                     <option id="exerciseModal@(muscle)" value="@muscle">@muscle</option>
                                 }
                             </select>
-                            <select type="text" required class="form-select" aria-label="Select Exercise Type" name="Type" style="margin-bottom:5px;">
-                                <option value="" id="defaultType" selected>Exercise Type</option>
+                            <select type="text" required class="form-select" aria-label="Select Category" name="category" style="margin-bottom:5px;">
+                                <option value="" id="defaultType" selected>Category</option>
                                 @foreach (object? type in Enum.GetValues(typeof(ExerciseCategory)))
                                 {
                                     <option id="exerciseModal@(type)" value="@type">@type</option>
                                 }
                             </select>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="0" id="exerciseModalIsPublicExercise" name="IsPublic">
+                                <input class="form-check-input" type="checkbox" value="0" id="exerciseModalIsPublicExercise" name="isPublic">
                                 <label class="form-check-label" for="exerciseModalIsPublicExercise">
                                     Public <br/><small>(This exercise will be visible to other users)</small>
                                 </label>
                             </div>
                             <div class="form-floating">
-                                <input class="form-control" id="exerciseModalExerciseNotes" name="Notes" style="height: 150px;">
+                                <input class="form-control" id="exerciseModalExerciseNotes" name="notes" style="height: 150px;">
                                 <label for="exerciseModalExerciseNotes">Notes: (optional)</label>
                             </div>
                         </div>
@@ -182,7 +181,7 @@
         //     console.log(exerciseId);
         //
         //     $.ajax({
-        //         url: '@Url.Action("DeleteExerciseEntry", "Exercise")', // the url of the action
+        //         url: '//Url.Action("DeleteExerciseEntry", "Exercise")', // the url of the action
         //         type: 'post', // the http method (e.g., post, get, etc.)
         //         data: { id: exerciseId }, // the data to be sent to the server
         //         success: function (result) {
@@ -246,26 +245,26 @@
         // Edit the list of Muscles shown in the Add/Edit Modals based on the region selected
         const regionSelector = document.getElementById("region-selector");
         const muscleSelector = document.getElementById("muscle-selector");
-        regionSelector.addEventListener("change", function () {
-            const region = regionSelector.value;
-            console.log("Region: " + region);
-    
-            $.ajax({
-                url: '@Url.Action("GetMusclesByRegion", "Exercise")',
-                type: 'GET',
-                data: {
-                    region: region
-                },
-                success: function (response) {
-                    // Handle the successful response from the controller
-                    populateMuscleDropdown(response);
-                },
-                error: function (xhr, status, error) {
-                    // Handle any errors that occur during the request
-                    console.error("error: " + error);
-                }
-            });
-        })
+        // regionSelector.addEventListener("change", function () {
+        //     const region = regionSelector.value;
+        //     console.log("Region: " + region);
+        //
+        //     $.ajax({
+        //         url: '//Url.Action("GetMusclesByRegion", "Exercise")',
+        //         type: 'GET',
+        //         data: {
+        //             region: region
+        //         },
+        //         success: function (response) {
+        //             // Handle the successful response from the controller
+        //             populateMuscleDropdown(response);
+        //         },
+        //         error: function (xhr, status, error) {
+        //             // Handle any errors that occur during the request
+        //             console.error("error: " + error);
+        //         }
+        //     });
+        // })
     
         // Function to populate the Muscle <select> tags
         function populateMuscleDropdown(muscles) {

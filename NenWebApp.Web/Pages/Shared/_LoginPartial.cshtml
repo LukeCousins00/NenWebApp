@@ -1,7 +1,9 @@
-﻿@using NenWebApp.Data.Entities
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NenWebApp.Data.Entities
 
-@inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+
 
 @{
     ApplicationUser? user = await UserManager.GetUserAsync(User);
@@ -14,7 +16,7 @@
             <a id="manage" style="padding: 0 8px 0 8px;" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><span style="font-size: 35px;" class="mdi mdi-account"></span></a>
         </li>
         <li class="nav-item" >
-            <form id="logoutForm" style="padding: 0;" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <form id="logoutForm" style="padding: 0;" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/Index">
                 <button id="logout" style="padding: 0 24px 0 8px;" type="submit" class="nav-link btn btn-link text-dark border-0"><span style="font-size: 35px;" class="mdi mdi-logout"></span></button>
             </form>
         </li>

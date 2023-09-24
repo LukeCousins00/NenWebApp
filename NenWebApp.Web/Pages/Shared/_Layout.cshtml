@@ -1,4 +1,5 @@
 ﻿@using NenWebApp.Data.Entities
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 <!DOCTYPE html>
 
 @inject SignInManager<ApplicationUser> SignInManager
@@ -23,11 +24,11 @@
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
             <img src="~/images/favicon.png" style="height: 45px; padding: 3px;"/>
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Nen</a>
+            <a class="navbar-brand" asp-page="Index">Nen</a>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-center" style="flex-direction:column">
                 <ul id="main-navbar" class="navbar-nav flex-grow-1" style="left: 15px; position: relative;">
                     <li class="nav-item">
-                        <a class="nav-link text-dark nav-a" asp-area="" asp-controller="Browse" asp-action="Index">
+                        <a class="nav-link text-dark nav-a" asp-page="Browse">
                             <span id="main-nav-browse" class="mdi mdi-magnify nav-icon"></span>
                         </a>
                     </li>
@@ -37,21 +38,21 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" asp-controller="Exercise" asp-action="Index">Exercises</a>
+                                <a class="dropdown-item" asp-page="Exercises">Exercises</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" asp-controller="Workout" asp-action="Index">Workouts</a>
+                                <a class="dropdown-item" asp-page="Workouts">Workouts</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" asp-controller="Program" asp-action="Index">Program</a>
+                                <a class="dropdown-item" asp-page="Programs">Program</a>
                             </li>
                         </ul>
                     </div>
                     <li class="nav-item">
-                        <a class="nav-link text-dark nav-a" asp-area="" asp-controller="Exercise" asp-action="Index"></a>
+                        <a class="nav-link text-dark nav-a" asp-page="Exercises"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark nav-a" asp-area="" asp-controller="Workout" asp-action="Index">
+                        <a class="nav-link text-dark nav-a" asp-page="Workouts">
                             <span id="main-nav-workout" class="mdi mdi-weight-lifter nav-icon"></span>
                         </a>
                     </li>

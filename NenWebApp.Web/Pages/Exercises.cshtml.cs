@@ -1,28 +1,32 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using NenWebApp.Logic.Interfaces;
 using NenWebApp.Shared.DTOs;
-using NenWebApp.ViewModels;
 
 namespace NenWebApp.Pages;
 
 public class Exercises : PageModel
 {
-    private readonly IExerciseService _exerciseService;
+    private readonly IActivityService _activityService;
     
     public IQueryable<ExerciseDto>? ExerciseList { get; set; }
-    public int? ExerciseId { get; set; }
+    public int? Id { get; set; }
 
-    public Exercises(IExerciseService exerciseService)
+    public Exercises(IActivityService activityService)
     {
-        _exerciseService = exerciseService;
+        _activityService = activityService;
     }
     
     public async void OnGetAsync()
     {
-        ExerciseList = await _exerciseService.GetExercises(User);
+        ExerciseList = await _activityService.GetExercises(User);
     }
 
     public void OnPost()
+    {
+        
+    }
+
+    public async Task OnPostDeleteAsync()
     {
         
     }

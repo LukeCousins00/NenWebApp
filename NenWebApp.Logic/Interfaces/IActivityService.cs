@@ -3,7 +3,7 @@ using NenWebApp.Shared.DTOs;
 
 namespace NenWebApp.Logic.Interfaces;
 
-public interface IExerciseService 
+public interface IActivityService 
 {
     Task<IQueryable<ExerciseDto>?> GetExercises(ClaimsPrincipal user);
     Task DeleteExerciseEntryAsync(ClaimsPrincipal user, Guid exerciseId);
